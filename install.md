@@ -14,7 +14,7 @@ icon: download
 
 | 镜像 | 用途 |
 | --- | --- |
-| `phpswoole/galaxy:<版本>` | 前端、Nginx、API、SSH Relay 和 Helm Service |
+| `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy:<版本>` | 前端、Nginx、API、SSH Relay 和 Helm Service |
 | `mysql:8.0` | 平台业务数据库 |
 | `redis:7.4-alpine` | 缓存、队列和 Agent 在线租约 |
 | `phpswoole/galaxy-agent:<版本>` | 接入 Docker Swarm 时部署到每个节点 |

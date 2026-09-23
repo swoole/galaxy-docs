@@ -18,7 +18,7 @@ cd galaxy
 
 1. 使用 `mysqldump` 将数据库备份到 `backups/`。
 2. 给当前应用镜像添加本地回滚标签。
-3. 拉取 `phpswoole/galaxy:<目标版本>`。
+3. 拉取 `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy:<目标版本>`。
 4. 只重建 Galaxy 应用容器，保留 MySQL、Redis 和数据卷。
 5. 等待健康检查；失败时自动恢复上一应用镜像。
 

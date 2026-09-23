@@ -8,7 +8,9 @@ icon: rocket
 快速部署方式使用 Docker Compose 启动 CodeGalaxy、MySQL 和 Redis。安装器自动生成数据库
 密码和应用密钥，首次启动时初始化空数据库。你只需在浏览器中设置第一个管理员账号。
 
-默认安装当前稳定版 `phpswoole/galaxy:latest`。需要固定环境时，可以明确指定版本号。
+默认从阿里云容器镜像服务安装当前稳定版
+`registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy:latest`。需要固定环境时，可以明确
+指定版本号。
 
 ## 环境要求
 
@@ -41,7 +43,8 @@ curl -fsSL https://git.code-galaxy.net/github/galaxy-docs/raw/branch/main/downlo
 
 1. 下载 Compose 文件和 `galaxyctl`。
 2. 生成随机数据库密码、JWT 密钥、集群与 SSH Relay 密钥和一次性安装令牌。
-3. 缺省拉取 `phpswoole/galaxy:latest`、MySQL 8.0 和 Redis 镜像。
+3. 缺省从阿里云拉取 `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy:latest`，并拉取
+   MySQL 8.0 和 Redis 镜像。
 4. 创建持久化数据卷并启动服务。
 5. 等待健康检查通过，然后输出首次初始化网址。
 
