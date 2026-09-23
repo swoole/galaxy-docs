@@ -15,21 +15,25 @@ icon: rocket
 - Linux x86_64 或 arm64 服务器
 - Docker Engine
 - Docker Compose v2（运行 `docker compose version` 可检查）
+- `curl`
 - 默认开放 TCP `8080`；使用容器 SSH 终端时还需开放 TCP `9522`
+
+`galaxyctl` 是安装包自带的 Shell 脚本，安装和更新不需要 Go 环境。平台镜像内的 Go 服务
+已经在发布镜像时编译完成。
 
 建议准备一个可从浏览器和目标集群访问的域名。首次体验也可以直接使用服务器 IP。
 
 ## 一键安装
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/swoole/galaxy/master/install.sh \
+curl -fsSL https://git.code-galaxy.net/github/galaxy-docs/raw/branch/main/downloads/install.sh \
   | bash -s -- --url http://<服务器IP>:8080
 ```
 
 固定安装 `1.0.0`：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/swoole/galaxy/master/install.sh \
+curl -fsSL https://git.code-galaxy.net/github/galaxy-docs/raw/branch/main/downloads/install.sh \
   | bash -s -- --version 1.0.0 --url http://<服务器IP>:8080
 ```
 
