@@ -15,12 +15,15 @@ icon: download
 | 镜像 | 用途 |
 | --- | --- |
 | `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy:<版本>` | 前端、Nginx、API、SSH Relay 和 Helm Service |
-| `mysql:8.0` | 平台业务数据库 |
-| `redis:7.4-alpine` | 缓存、队列和 Agent 在线租约 |
-| `phpswoole/galaxy-agent:<版本>` | 接入 Docker Swarm 时部署到每个节点 |
+| `registry.cn-shanghai.aliyuncs.com/swoole-public/mysql:8.0` | 平台业务数据库 |
+| `registry.cn-shanghai.aliyuncs.com/swoole-public/redis:7.4-alpine` | 缓存、队列和 Agent 在线租约 |
+| `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy-agent:<版本>` | 接入 Docker Swarm 时部署到每个节点 |
 
 MySQL 和 Redis 只加入 Compose 内部网络，不映射到宿主机端口。业务数据分别保存在命名
 数据卷中，重建应用容器不会删除数据。
+
+默认镜像与 Docker Hub、原始上游镜像的完整对应关系见[镜像仓库对照表](./image-registry.md)。
+服务器能够稳定访问上游仓库时，可按表格替换。
 
 一键部署命令和首次初始化步骤见 [Docker 快速起步](./quick-start.md)。
 

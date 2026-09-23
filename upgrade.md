@@ -60,7 +60,7 @@ ls -lh backups/
 
 ```bash
 sudo galaxy agent set \
-  --image phpswoole/galaxy-agent:<版本>
+  --image registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy-agent:<版本>
 ```
 
 使用固定版本标签。更新后检查：
