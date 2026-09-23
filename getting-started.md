@@ -118,6 +118,7 @@ REDIS_DB=0
 
 ```bash
 openssl rand -base64 32   # SWARM_CREDENTIAL_KEY，所有 API 实例须保持一致
+openssl rand -base64 32   # ENCRYPT_KEY，所有 API 实例须保持一致
 ```
 
 同时填写对外地址，容器部署时**不要填 `localhost`**：

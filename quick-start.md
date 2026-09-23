@@ -5,8 +5,11 @@ icon: rocket
 
 # Docker 快速起步
 
-快速部署方式使用 Docker Compose 启动 CodeGalaxy、MySQL 和 Redis。安装器自动生成数据库
+快速部署方式用于单台 Docker 主机和产品体验，使用 Docker Compose 启动 CodeGalaxy、MySQL 和 Redis。安装器自动生成数据库
 密码和应用密钥，首次启动时初始化空数据库。你只需在浏览器中设置第一个管理员账号。
+
+Docker Swarm 集群不要使用此 Compose 文件；请使用[Swarm 部署方案](./swarm-deployment.md)。
+正式环境中的 MySQL 和 Redis 由用户独立部署和维护。
 
 默认从阿里云容器镜像服务安装当前稳定版
 `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy:latest`。需要固定环境时，可以明确

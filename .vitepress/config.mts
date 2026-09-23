@@ -38,6 +38,7 @@ export default defineConfig({
           { text: 'Docker 快速起步', link: '/quick-start' },
           { text: '完整搭建教程', link: '/getting-started' },
           { text: '安装 CodeGalaxy', link: '/install' },
+          { text: '部署到 Docker Swarm', link: '/swarm-deployment' },
           { text: '镜像仓库对照表', link: '/image-registry' },
           { text: '接入集群并发布项目', link: '/tutorials/first-project' },
           { text: '更新与备份', link: '/upgrade' },

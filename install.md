@@ -10,7 +10,11 @@ icon: download
 
 ## Docker Compose 部署
 
-快速部署由以下镜像组成：
+此方式用于单台 Docker 主机。不要直接使用 `docker stack deploy` 部署本页的
+`compose.yaml`，因为其中的 MySQL、Redis 命名卷属于节点本地存储，任务迁移后无法继续
+访问原数据。Swarm 环境请使用[部署到 Docker Swarm](./swarm-deployment.md)方案。
+
+快速体验由以下镜像组成：
 
 | 镜像 | 用途 |
 | --- | --- |
@@ -20,7 +24,8 @@ icon: download
 | `registry.cn-shanghai.aliyuncs.com/swoole-public/galaxy-agent:<版本>` | 接入 Docker Swarm 时部署到每个节点 |
 
 MySQL 和 Redis 只加入 Compose 内部网络，不映射到宿主机端口。业务数据分别保存在命名
-数据卷中，重建应用容器不会删除数据。
+数据卷中，重建应用容器不会删除数据。此内置数据库和 Redis 只用于快速体验；正式部署由
+用户自行提供和维护 MySQL、Redis，Galaxy 部署只管理 Galaxy 服务本身。
 
 默认镜像与 Docker Hub、原始上游镜像的完整对应关系见[镜像仓库对照表](./image-registry.md)。
 服务器能够稳定访问上游仓库时，可按表格替换。
@@ -70,6 +75,7 @@ REDIS_PORT=6379
 APP_BASE_URL=https://galaxy.example.com/api
 WEBHOOK_BASE_URL=https://galaxy.example.com/api
 AGENT_SERVER_URL=https://galaxy.example.com
+ENCRYPT_KEY=<openssl rand -base64 32 的输出>
 SWARM_CREDENTIAL_KEY=<openssl rand -base64 32 的输出>
 GALAXY_INSTALL_TOKEN=<openssl rand -hex 32 的输出>
 GALAXY_ADMIN_EMAIL=admin@example.com
