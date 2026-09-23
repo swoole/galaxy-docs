@@ -5,25 +5,33 @@ icon: download
 
 # 安装 CodeGalaxy
 
-CodeGalaxy 当前已经开放 API、前端和 CLI/Agent 源码。统一的一键发行安装器仍在开发中，
-本页先说明当前可执行的源码安装方式。正式安装器发布后，本页会增加 Docker Compose 快速
-安装流程。
+新安装建议使用 [Docker 快速起步](./quick-start.md)。本页说明镜像部署结构和需要自行管理
+基础设施时的源码安装方式。
 
-## 部署结构
+## Docker Compose 部署
 
-管理中心需要以下组件：
+快速部署由以下镜像组成：
 
-| 组件 | 要求 |
+| 镜像 | 用途 |
 | --- | --- |
-| galaxy-api | PHP 8.4、Swoole 6.0，默认监听 9501 |
-| galaxy-fe | Node.js 20 构建，Nginx 托管静态文件 |
-| MySQL | 8.0 |
-| Redis | 稳定版本 |
+| `phpswoole/galaxy:<版本>` | 前端、Nginx、API、SSH Relay 和 Helm Service |
+| `mysql:8.0` | 平台业务数据库 |
+| `redis:7.4-alpine` | 缓存、队列和 Agent 在线租约 |
+| `phpswoole/galaxy-agent:<版本>` | 接入 Docker Swarm 时部署到每个节点 |
 
-业务集群不需要运行管理中心。Docker Swarm 在每个节点运行 `galaxy-agent`；Kubernetes
-由 API 使用加密 kubeconfig 连接。
+MySQL 和 Redis 只加入 Compose 内部网络，不映射到宿主机端口。业务数据分别保存在命名
+数据卷中，重建应用容器不会删除数据。
 
-## 1. 准备数据库
+一键部署命令和首次初始化步骤见 [Docker 快速起步](./quick-start.md)。
+
+安装器默认使用 `latest` 稳定标签。生产环境需要固定升级窗口时，通过
+`--version <版本号>` 选择指定版本，例如 `--version 1.0.0`。
+
+## 源码安装
+
+源码方式适合开发、二次开发，或需要使用已有 MySQL、Redis 和反向代理的环境。
+
+### 1. 初始化数据库
 
 ```bash
 git clone https://github.com/swoole/galaxy-api.git
@@ -36,14 +44,14 @@ mysql -uroot -p -h127.0.0.1 code_galaxy < database/init.sql
 
 `database/init.sql` 只用于空库，不能用于覆盖或升级已有数据库。
 
-## 2. 配置并启动 API
+### 2. 配置并启动 API
 
 ```bash
 composer install
 cp .env.example .env
 ```
 
-至少编辑这些配置：
+至少设置数据库、Redis、对外地址、集群凭证密钥和安装令牌：
 
 ```dotenv
 APP_ENV=prod
@@ -51,25 +59,18 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=code_galaxy
 DB_USERNAME=galaxy
-DB_PASSWORD=请替换
+DB_PASSWORD=<数据库密码>
 
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
-REDIS_AUTH=(null)
 
 APP_BASE_URL=https://galaxy.example.com/api
 WEBHOOK_BASE_URL=https://galaxy.example.com/api
 AGENT_SERVER_URL=https://galaxy.example.com
-SWARM_CREDENTIAL_KEY=请使用随机值
+SWARM_CREDENTIAL_KEY=<openssl rand -base64 32 的输出>
+GALAXY_INSTALL_TOKEN=<openssl rand -hex 32 的输出>
+GALAXY_ADMIN_EMAIL=admin@example.com
 ```
-
-生成密钥：
-
-```bash
-openssl rand -base64 32
-```
-
-启动并检查 API：
 
 ```bash
 composer start
@@ -78,16 +79,17 @@ curl -fsS http://127.0.0.1:9501/healthz
 
 生产环境应使用 systemd、容器运行时或其他进程管理器确保 API 自动重启。
 
-## 3. 构建前端
+### 3. 构建前端
 
 ```bash
 git clone https://github.com/swoole/galaxy-fe.git
 cd galaxy-fe
-npm install
+npm ci
 npm run build
 ```
 
-将 `dist/` 交给 Nginx，并把 `/api/` 代理到 API：
+将 `dist/` 交给 Nginx，并把 `/api/` 代理到 API。Agent 使用固定的
+`/agent/connect` WebSocket 路径，代理必须保留 `Upgrade` 和 `Connection` 请求头。
 
 ```nginx
 location /api/ {
@@ -115,24 +117,27 @@ location = /agent/connect {
 }
 ```
 
-Agent 使用固定的 `/agent/connect` WebSocket 路径，因此 `AGENT_SERVER_URL` 和
-`galaxy agent install --server` 应填写站点根地址，不能附加 `/api`。WebSocket 代理必须
-保留 `Upgrade` 和 `Connection` 请求头。
+源码部署可以通过 API 路径打开一次性安装页：
 
-## 4. 验证
-
-```bash
-curl -fsS https://galaxy.example.com/api/healthz
+```text
+https://galaxy.example.com/api/install#token=<GALAXY_INSTALL_TOKEN>
 ```
 
-浏览器打开 `https://galaxy.example.com`，完成账号注册和组织创建。随后按
-[首次使用](./tutorials/first-project.md) 接入集群并发布第一个项目。
+创建首个账号后，此页面和初始化接口返回 `404`。也可以在 API 目录使用命令行创建首个
+账号，密码通过标准输入传入，不会写入 shell 历史：
+
+```bash
+printf '%s\n' '<管理员密码>' \
+  | php bin/hyperf.php user:create \
+      --email admin@example.com \
+      --nickname Administrator \
+      --password-stdin
+```
 
 ## 生产检查
 
 - 管理入口启用 HTTPS。
 - MySQL 与 Redis 不直接暴露到公网。
-- `.env` 仅部署用户可读，且已备份所有随机密钥。
+- `.env` 只允许部署用户读取，并备份其中的固定密钥。
 - `APP_BASE_URL`、`WEBHOOK_BASE_URL` 和 `AGENT_SERVER_URL` 使用其他机器可访问的地址。
-- SMTP 已配置，否则邮箱验证码注册不可用。
 - API、数据库和 Redis 均配置自动重启与备份。

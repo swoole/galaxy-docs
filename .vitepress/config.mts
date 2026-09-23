@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
+  base: '/galaxy/',
   lang: 'zh-CN',
   title: 'CodeGalaxy 文档',
   description: 'CodeGalaxy 自托管研发管理平台安装与使用文档',
@@ -12,7 +13,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '功能介绍', link: '/' },
-      { text: '快速开始', link: '/getting-started' },
+      { text: '快速开始', link: '/quick-start' },
       { text: '安装', link: '/install' },
       { text: '更新', link: '/upgrade' },
       {
@@ -34,6 +35,7 @@ export default defineConfig({
       {
         text: '开始使用',
         items: [
+          { text: 'Docker 快速起步', link: '/quick-start' },
           { text: '完整搭建教程', link: '/getting-started' },
           { text: '安装 CodeGalaxy', link: '/install' },
           { text: '接入集群并发布项目', link: '/tutorials/first-project' },

@@ -3,6 +3,9 @@
 本教程面向第一次部署 CodeGalaxy 的运维/开发人员，从零介绍如何把平台跑起来，以及如何接
 入集群、建项目、构建、部署和日常使用。
 
+只想快速体验时，请先使用 [Docker 快速起步](./quick-start.md)。本教程保留完整的源码搭建
+和组件配置说明。
+
 > 阅读顺序建议：先看完「一、平台概览」建立整体认知，再按「三、四、五」完成部署，最后
 > 按「六、七」接入集群并投入使用。
 
@@ -186,9 +189,8 @@ docker run -d --name galaxy-fe -p 8081:80 --restart=always your-registry/galaxy-
 | `VUE_APP_TRUSTED_DOMAINS` | 同名 | 空 | 登录后可跳转的外域白名单，逗号分隔，支持 `*.example.com` |
 | `VUE_APP_COOKIE_DOMAIN` | 同名 | 空 | 跨域 Cookie 写入域名，如 `.example.com` |
 
-> **安全提示**：`VUE_APP_TRUSTED_DOMAINS` 与 `VUE_APP_COOKIE_DOMAIN` 为空时会回落到源码
-> 内置的默认域名。自建部署**务必显式指定**这两个参数，否则可能出现令牌被跳转到非预期
-> 域名的风险。
+`VUE_APP_TRUSTED_DOMAINS` 与 `VUE_APP_COOKIE_DOMAIN` 默认为空。只有需要跨子域跳转或共享
+Cookie 时才设置，并限制为自己控制的域名。
 
 ### 4.2 配置反向代理（关键步骤）
 
@@ -235,7 +237,14 @@ Agent 使用固定的 `/agent/connect` 路径。`AGENT_SERVER_URL` 和
 
 ### 5.1 注册第一个账号
 
-平台采用**邮箱 + 邮件验证码**注册，因此 `.env` 中必须先配置可用的 `SMTP_*`。
+首次安装可以设置 `GALAXY_INSTALL_TOKEN`，然后打开一次性安装页创建管理员，无需配置邮件：
+
+```text
+https://galaxy.example.com/api/install#token=<GALAXY_INSTALL_TOKEN>
+```
+
+创建成功后安装页不可再次进入。后续开放普通用户自助注册时，邮箱注册采用**邮箱 + 邮件
+验证码**，需要先配置可用的 `SMTP_*`。
 
 注册需要：邮箱、邮件验证码、密码（6–20 位）、确认密码、昵称。
 

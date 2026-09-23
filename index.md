@@ -113,9 +113,10 @@ Ingress。DNS 和外部负载均衡由用户自己的基础设施管理。
 
 ## 开始使用
 
-1. [安装 CodeGalaxy](./install.md)
-2. [首次接入集群并发布项目](./tutorials/first-project.md)
-3. [了解更新与备份](./upgrade.md)
+1. [使用 Docker 快速起步](./quick-start.md)
+2. [了解其他安装方式](./install.md)
+3. [首次接入集群并发布项目](./tutorials/first-project.md)
+4. [了解更新与备份](./upgrade.md)
 
 源码仓库：
 
