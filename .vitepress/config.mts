@@ -15,6 +15,7 @@ export default defineConfig({
       { text: '功能介绍', link: '/' },
       { text: '快速开始', link: '/quick-start' },
       { text: '安装', link: '/install' },
+      { text: 'CLI', link: '/cli' },
       { text: '更新', link: '/upgrade' },
       {
         text: 'GitHub',
@@ -38,6 +39,7 @@ export default defineConfig({
           { text: 'Docker 快速起步', link: '/quick-start' },
           { text: '完整搭建教程', link: '/getting-started' },
           { text: '安装 CodeGalaxy', link: '/install' },
+          { text: 'Galaxy CLI 使用指南', link: '/cli' },
           { text: '部署到 Docker Swarm', link: '/swarm-deployment' },
           { text: '镜像仓库对照表', link: '/image-registry' },
           { text: '接入集群并发布项目', link: '/tutorials/first-project' },

@@ -455,6 +455,9 @@ Label 管理的 Service。
 galaxy version
 ```
 
+登录、项目初始化、构建发布、文件同步和容器操作的完整说明见
+[Galaxy CLI 使用指南](./cli.md)。
+
 命令补全：
 
 ```bash
